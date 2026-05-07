@@ -1,0 +1,50 @@
+seed: 0
+device: cuda
+
+data:
+  path: data/nozzle_dataset_temporal_n1000_min40.h5
+  nx: 128
+  ny: 128
+  t_min: 0.1
+  multifield: false        # set true to also load f, u_x, u_y for Stage-2 use
+  field_names: [f, u_x, u_y]
+  batch_size: 16
+  num_workers: 4
+  val_frac: 0.1
+  test_frac: 0.1
+
+model:
+  d_z: 48
+  d_model: 64
+  n_fno_blocks: 4
+  n_modes: 16
+  decoder_hidden: 128
+  decoder_layers: 4
+  decoder_fourier: 64
+  spatial_sigmas: [1, 2, 5, 10, 20, 50, 100]
+  time_frequencies: [1, 2, 5, 10, 20, 50, 100]
+  geom_hidden: 64
+  geom_layers: 3
+  geom_fourier: 32
+  x_lo_nozzle: 0.0
+  x_hi_nozzle: 0.7
+  dropout: 0.0
+
+loss:
+  lambda_geom: 5.0
+  free_bits: 0.5
+  beta_warmup: 100
+  beta_max: 5.0e-4
+  kl_target: 18.0
+  pid_kp: 1.0e-5
+
+optim:
+  lr: 1.0e-4
+  weight_decay: 1.0e-4
+  epochs: 300
+  grad_clip: 1.0
+
+output:
+  out_dir: experiments/vae
+  log_every: 50
+  ckpt_every: 50

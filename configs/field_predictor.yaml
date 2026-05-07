@@ -1,0 +1,38 @@
+seed: 0
+device: cuda
+
+data:
+  path: data/nozzle_dataset_temporal_n1000_min40.h5
+  nx: 128
+  ny: 128
+  t_min: 0.1
+  batch_size: 32
+  num_workers: 4
+
+model:
+  in_channels: 1
+  out_channels: 3
+  base_channels: 32
+  depth: 4
+
+loss:
+  channel_weights:
+    f: 1.0
+    u: 2.0
+    v: 2.0
+
+optim:
+  lr: 1.0e-3
+  weight_decay: 1.0e-4
+  epochs: 100
+  grad_clip: 1.0
+
+input:
+  # Set these after Stage-1 finishes. The split must come from the same VAE
+  # run as the checkpoint, so the field predictor doesn't see VAE-train data.
+  vae_checkpoint: experiments/vae/run_TIMESTAMP/best.pt
+  split_info:    experiments/vae/run_TIMESTAMP/split_info.pt
+
+output:
+  out_dir: experiments/field_predictor
+  log_every: 5

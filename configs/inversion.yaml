@@ -1,0 +1,25 @@
+seed: 0
+device: cuda
+
+data:
+  path: data/nozzle_dataset_temporal_n1000_min40.h5
+  nx: 128
+  ny: 128
+  t_min: 0.1
+  multifield: true     # required for Stage-2 metrics (f, u, v ground truth)
+
+checkpoints:
+  vae:             experiments/vae/run_TIMESTAMP/best.pt
+  split_info:      experiments/vae/run_TIMESTAMP/split_info.pt
+  field_predictor: experiments/field_predictor/run_TIMESTAMP/best.pt   # null to skip Stage-2
+
+inversion:
+  n_starts: 8
+  n_steps: 300
+  lr: 5.0e-2
+  lambda_prior: 1.0e-3
+  max_z_norm: 8.0     # auto-bumped to (max training ||z||) * 1.1 if too tight
+
+output:
+  out_dir: analysis/geometry_inversion
+  max_test_sims: -1   # -1 for the whole test split; set N to truncate (smoke test)

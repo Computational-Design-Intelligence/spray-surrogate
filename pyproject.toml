@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spray_surrogate"
+version = "0.1.0"
+description = "Geometry-conditioned latent surrogate for two-phase nozzle flows."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "torch>=2.2",
+    "numpy>=1.26",
+    "h5py>=3.10",
+    "pyyaml>=6.0",
+    "tensorboard>=2.15",
+    "tqdm>=4.66",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.4",
+    "black>=24.0",
+    "pre-commit>=3.6",
+]
+viz = [
+    "matplotlib>=3.8",
+    "scikit-learn>=1.4",
+]
+
+[project.scripts]
+train-vae             = "spray_surrogate.cli:train_vae"
+train-field-predictor = "spray_surrogate.cli:train_field_predictor"
+run-inversion         = "spray_surrogate.cli:run_inversion"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "SIM"]
+# N803/N806/N812: allow scientific-Python conventions (Nx, B, Ny argument and local names).
+# SIM108: 'use ternary' is more aesthetic than the if/else block in some cases — leave it.
+ignore = ["N803", "N806", "N812", "SIM108"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --strict-markers"
